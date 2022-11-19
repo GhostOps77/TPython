@@ -10,11 +10,13 @@ classifiers = [
 
 with open('README.md', 'r') as f:
     ld = f.read()
+with open('version', 'r') as f:
+    ve = f.read()
 
 if __name__ == '__main__':
     setup(
     name='TPython',
-    version="0.1",
+    version=ve,
     description='A better python REPL',
     long_description=ld,
     long_description_content_type='text/markdown',
@@ -25,5 +27,10 @@ if __name__ == '__main__':
     classifiers=classifiers,
     keywords='interactive,python,better,repl,tpython', 
     packages=[],
-    install_requires=['colorama']
+    install_requires=['colorama'],
+    entry_points={
+        'console-scripts':[
+            'tpy = main:main'
+        ]
+    }
     )

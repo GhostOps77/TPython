@@ -25,8 +25,7 @@ if __name__ == '__main__':
     author_email='techlord210@gmail.com',
     license='MIT', 
     classifiers=classifiers,
-    keywords='interactive,python,better,repl,tpython', 
-    packages=[],
+    keywords='interactive,python,better,repl,tpython',
     install_requires=['colorama'],
     entry_points={
         'console_scripts':[

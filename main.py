@@ -6,12 +6,14 @@ try:
 except:
     sys.exit('module not found: colorama\npython3 -m pip install colorama')
 
+n = 1
+err = False
+a = False
+namespace = {}
+
 def main():
+    global n, err, a
     cinit(autoreset=True)
-    n = 1
-    err = False
-    a = False
-    namespace = {}
 
     def ext(crash=False):
         cl = get_terminal_size().columns
@@ -51,8 +53,7 @@ def main():
                         system('cls' if name == 'nt' else 'clear')
                         err = False
                     elif inp == 'version':
-                        with open('version', 'r') as f:
-                            print(f'{Fore.LIGHTCYAN_EX}{f.read()}')
+                        print(f'{Fore.LIGHTCYAN_EX}0.2')
                     else:
                         if inp.endswith(':'):
                             while True:

@@ -12,11 +12,12 @@ classifiers = [
 
 with open('README.md', 'r') as f:
     ld = f.read()
+version = '0.3'
 
 if __name__ == '__main__':
     setup(
     name='TPython',
-    version='0.2',
+    version=version,
     description='A better python REPL',
     long_description=ld,
     long_description_content_type='text/markdown',

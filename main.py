@@ -1,4 +1,4 @@
-import sys
+import sys, ast, copy
 from os import system, name, get_terminal_size
 from traceback import format_exc
 try:
@@ -10,6 +10,7 @@ n = 1
 err = False
 a = False
 namespace = {}
+version = 0.3
 
 def main():
     global n, err, a
@@ -25,10 +26,28 @@ def main():
         sys.exit(f'{Fore.LIGHTYELLOW_EX}{"-"*cl}\n{m}\n{"-"*cl}' if crash else f'{Fore.LIGHTCYAN_EX}{m}')
 
     try:
-        def exe(inp):
+        def execute(inp):
             global err, n
+            def executor(code):
+                def convertExpr2Expression(Expr):
+                    Expr.lineno = 0
+                    Expr.col_offset = 0
+                    result = ast.Expression(Expr.value, lineno=0, col_offset = 0)
+                    return result
+                code_ast = ast.parse(code)
+                init_ast = copy.deepcopy(code_ast)
+                init_ast.body = code_ast.body[:-1]
+                last_ast = copy.deepcopy(code_ast)
+                last_ast.body = code_ast.body[-1:]
+                exec(compile(init_ast, "<console>", "exec"), namespace)
+                if type(last_ast.body[0]) == ast.Expr:
+                    return eval(compile(convertExpr2Expression(last_ast.body[0]), "<console>", "eval"), namespace)
+                else:
+                        exec(compile(last_ast, "<console>", "exec"), namespace)
             try:
-                exec(inp, namespace)
+                v = executor(inp)
+                if v != None:
+                    print(v)
                 err = False
             except Exception:
                 print(f'{Fore.LIGHTRED_EX}{format_exc()}')
@@ -53,7 +72,7 @@ def main():
                         system('cls' if name == 'nt' else 'clear')
                         err = False
                     elif inp == 'version':
-                        print(f'{Fore.LIGHTCYAN_EX}0.2')
+                        print(f'{Fore.LIGHTCYAN_EX}{version}')
                     else:
                         if inp.endswith(':'):
                             while True:
@@ -65,10 +84,10 @@ def main():
                                         break
                                 else:
                                     inp += f'\n\t{ig}'
-                            exe(inp)
+                            execute(inp)
                             a = False
                         else:
-                            exe(inp)
+                            execute(inp)
             except KeyboardInterrupt:
                 print(f'\n{Fore.LIGHTYELLOW_EX}KeyboardInterrupt')
                 err = True

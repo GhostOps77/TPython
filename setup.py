@@ -29,7 +29,7 @@ if __name__ == '__main__':
     packages=[],
     install_requires=['colorama'],
     entry_points={
-        'console-scripts':[
+        'console_scripts':[
             'tpy = main:main'
         ]
     }

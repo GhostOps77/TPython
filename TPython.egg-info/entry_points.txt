@@ -1,2 +1,2 @@
-[console-scripts]
+[console_scripts]
 tpy = main:main

@@ -1,21 +1,25 @@
-import sys, ast, copy
+# Import libs
+import sys
 from os import system, name, get_terminal_size
 from traceback import format_exc
 try:
     from colorama import init as cinit, Fore
 except:
-    sys.exit('module not found: colorama\npython3 -m pip install colorama')
+    sys.exit('module not found: colorama')
 
+# Vars
 n = 1
 err = False
 a = False
 namespace = {}
-version = 0.3
+version = 0.4
 
+# Main Function
 def main():
     global n, err, a
     cinit(autoreset=True)
 
+    # exit function
     def ext(crash=False):
         cl = get_terminal_size().columns
         m = 'Crashed' if crash else 'Process Completed Successfully'
@@ -26,34 +30,24 @@ def main():
         sys.exit(f'{Fore.LIGHTYELLOW_EX}{"-"*cl}\n{m}\n{"-"*cl}' if crash else f'{Fore.LIGHTCYAN_EX}{m}')
 
     try:
+        # execute function
         def execute(inp):
             global err, n
-            def executor(code):
-                def convertExpr2Expression(Expr):
-                    Expr.lineno = 0
-                    Expr.col_offset = 0
-                    result = ast.Expression(Expr.value, lineno=0, col_offset = 0)
-                    return result
-                code_ast = ast.parse(code)
-                init_ast = copy.deepcopy(code_ast)
-                init_ast.body = code_ast.body[:-1]
-                last_ast = copy.deepcopy(code_ast)
-                last_ast.body = code_ast.body[-1:]
-                exec(compile(init_ast, "<console>", "exec"), namespace)
-                if type(last_ast.body[0]) == ast.Expr:
-                    return eval(compile(convertExpr2Expression(last_ast.body[0]), "<console>", "eval"), namespace)
-                else:
-                        exec(compile(last_ast, "<console>", "exec"), namespace)
+            run = False
             try:
-                v = executor(inp)
-                if v != None:
-                    print(v)
-                err = False
-            except Exception:
-                print(f'{Fore.LIGHTRED_EX}{format_exc()}')
-                err = True
+                print(repr(eval(inp, namespace)))
+            except:
+                run = True
+            if run:
+                try:
+                    exec(inp, namespace)
+                    err = False
+                except Exception:
+                    print(f'{Fore.LIGHTRED_EX}{format_exc()}')
+                    err = True
             n += 1
 
+        # Welcome message
         cl = get_terminal_size().columns
         m = 'Welcome to TPython'
         cl -= 18
@@ -61,19 +55,23 @@ def main():
             m = f'-{m}-'
         print(f'{Fore.LIGHTCYAN_EX}{m}')
 
+        # Input
         while True:
             try:
                 inp = input(f'{Fore.LIGHTGREEN_EX}[{Fore.LIGHTRED_EX if err else Fore.RESET}{n}{Fore.LIGHTGREEN_EX}]-{Fore.LIGHTCYAN_EX}> {Fore.RESET}')
                 if not (inp.isspace() or inp == ''):
                     inp = inp.strip()
-                    if inp == 'exit' or inp == 'quit':
+                    # Exit command
+                    if inp in ('exit', 'quit', 'close'):
                         ext()
-                    elif inp == 'clear' or inp == 'cls':
+                    elif inp in ('clear', 'cls'):
                         system('cls' if name == 'nt' else 'clear')
                         err = False
+                    # Version command
                     elif inp == 'version':
                         print(f'{Fore.LIGHTCYAN_EX}{version}')
                     else:
+                        # Statements that require indents eg: def, if
                         if inp.endswith(':'):
                             while True:
                                 ig = input(f'{Fore.LIGHTGREEN_EX}[{Fore.LIGHTYELLOW_EX}{":"*len(str(n))}{Fore.LIGHTGREEN_EX}]-{Fore.LIGHTYELLOW_EX}> {Fore.RESET}')
@@ -83,7 +81,8 @@ def main():
                                     else:
                                         break
                                 else:
-                                    inp += f'\n\t{ig}'
+                                    inp += f'\n\t{ig}' if repr(inp).startswith('\t') else f'\n\t{ig}'
+                            print(inp)
                             execute(inp)
                             a = False
                         else:

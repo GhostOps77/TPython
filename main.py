@@ -7,7 +7,7 @@ try:
 except ModuleNotFoundError:
     sys.exit('module not found: colorama')
 try:
-    from requests import get, ConnectTimeout
+    from requests import get, ConnectionError
 except ModuleNotFoundError:
     sys.exit('module not found: requests')
 
@@ -16,7 +16,7 @@ n = 1
 err = False
 a = False
 namespace = {}
-VERSION = '0.5'
+VERSION = '0.5.1'
 
 # Updater
 try:
@@ -27,11 +27,11 @@ try:
         pypi_version = i
     if pypi_json != VERSION:
         print(f'{Fore.LIGHTCYAN_EX}Newer version of TPython is available: {Fore.LIGHTGREEN_EX}{pypi_version}')
-        CHOICE = input(f'{Fore.LIGHTCYAN_EX}do you want to install {pypi_version} Y/n: {Fore.RESET}').lower().strip()
+        CHOICE = input(f'{Fore.LIGHTCYAN_EX}Do you want to install {pypi_version} Y/n: {Fore.RESET}').lower().strip()
         if CHOICE in ('y', ''):
             subprocess.run([sys.executable, '-m', 'pip', 'install', '--upgrade', 'TPython'])
             sys.exit()
-except ConnectTimeout:
+except ConnectionError:
     pass
 
 # Main Function

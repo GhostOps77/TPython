@@ -4,6 +4,7 @@ from os import system, name, get_terminal_size
 from traceback import format_exc
 try:
     from colorama import init as cinit, Fore
+    cinit(autoreset=True)
 except ModuleNotFoundError:
     sys.exit('module not found: colorama')
 try:
@@ -16,7 +17,7 @@ n = 1
 err = False
 a = False
 namespace = {}
-VERSION = '0.5.1'
+VERSION = '0.5.2'
 
 # Updater
 try:
@@ -25,19 +26,21 @@ try:
     pypi_version = None
     for i in pypi_json['releases']:
         pypi_version = i
-    if pypi_json != VERSION:
+    if pypi_version != VERSION:
         print(f'{Fore.LIGHTCYAN_EX}Newer version of TPython is available: {Fore.LIGHTGREEN_EX}{pypi_version}')
-        CHOICE = input(f'{Fore.LIGHTCYAN_EX}Do you want to install {pypi_version} Y/n: {Fore.RESET}').lower().strip()
-        if CHOICE in ('y', ''):
+        CHOICE = input(f'{Fore.LIGHTCYAN_EX}Do you want to install {Fore.LIGHTGREEN_EX}{pypi_version}{Fore.LIGHTCYAN_EX} Y/n: {Fore.RESET}').lower().strip()
+        if CHOICE in ('y', 'yes', ''):
             subprocess.run([sys.executable, '-m', 'pip', 'install', '--upgrade', 'TPython'])
             sys.exit()
+except KeyboardInterrupt:
+    print(f'\n{Fore.LIGHTYELLOW_EX}KeyboardInterrupt')
+    sys.exit()
 except ConnectionError:
     pass
 
 # Main Function
 def main():
     global n, err, a
-    cinit(autoreset=True)
 
     # exit function
     def ext(crash=False):

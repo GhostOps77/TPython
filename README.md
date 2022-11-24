@@ -2,7 +2,7 @@
 TPython a better python REPL.
 
 ## Features
-- Built-in clear/cls
+- Built-in TimeIt, clear/cls
 - Colors
 - Update Notifier 
 
@@ -10,7 +10,6 @@ TPython a better python REPL.
 - Tab Completion
 - Custom Colors
 - Break Points
-- TimeIt
 
 ## Installation
 ```
@@ -28,3 +27,4 @@ $ tpy
 | version | tells version |
 | exit/quit/close | exits the REPL |
 | cls/clear | clears the terminal |
+| timeit | tells execution time of code |

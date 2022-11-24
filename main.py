@@ -2,6 +2,7 @@
 import sys, subprocess
 from os import system, name, get_terminal_size
 from traceback import format_exc
+from time import time
 try:
     from colorama import init as cinit, Fore
     cinit(autoreset=True)
@@ -17,7 +18,7 @@ n = 1
 err = False
 a = False
 namespace = {}
-VERSION = '0.5.3'
+VERSION = '0.6'
 
 # Updater
 try:
@@ -54,11 +55,16 @@ def main():
 
     try:
         # execute function
-        def execute(inp):
+        def execute(inp, timeit=False):
             global err, n
             run = False
+            before = 0
+            if timeit:
+                before = time()
             try:
-                print(repr(eval(inp, namespace)))
+                e = eval(inp, namespace)
+                if e != None:
+                    print(e)
             except:
                 run = True
             if run:
@@ -68,6 +74,8 @@ def main():
                 except Exception:
                     print(f'{Fore.LIGHTRED_EX}{format_exc()}')
                     err = True
+            if timeit:
+                print(f'{Fore.LIGHTGREEN_EX}Execution time: {Fore.LIGHTYELLOW_EX}{time()-before}')
             n += 1
 
         # Welcome message
@@ -93,6 +101,26 @@ def main():
                     # Version command
                     elif inp == 'version':
                         print(f'{Fore.LIGHTCYAN_EX}{VERSION}')
+                    # TimeIt command
+                    elif inp == 'timeit':
+                        while True:
+                            tnp = input(f'{Fore.LIGHTGREEN_EX}[{Fore.RESET}TimeIt{Fore.LIGHTGREEN_EX}]-{Fore.RESET}> ').strip()
+                            if tnp.endswith(':'):
+                                while True:
+                                    ig = input(f'{Fore.LIGHTGREEN_EX}[{Fore.RESET}{"::::::"}{Fore.LIGHTGREEN_EX}]-{Fore.RESET}> ')
+                                    if ig.strip() == '':
+                                        if not a:
+                                            a = True
+                                        else:
+                                            break
+                                    else:
+                                        tnp += f'\n\t{ig}' if repr(tnp).startswith('\t') else f'\n\t{ig}'
+                                execute(tnp, True)
+                                a = False
+                                break
+                            else:
+                                execute(tnp, True)
+                                break
                     else:
                         # Statements that require indents eg: def, if
                         if inp.endswith(':'):

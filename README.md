@@ -10,7 +10,7 @@ TPython a better python REPL.
 - Tab Completion
 - Custom Colors
 - Break Points
-- Ignore Exceptions
+- TimeIt
 
 ## Installation
 ```

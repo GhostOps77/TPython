@@ -2,7 +2,7 @@ from setuptools import setup
 
 with open('README.md', 'r') as f:
     LD = f.read()
-VERSION = '0.5.2'
+VERSION = '0.5.3'
 
 if __name__ == '__main__':
     setup(

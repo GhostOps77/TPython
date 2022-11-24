@@ -17,7 +17,7 @@ n = 1
 err = False
 a = False
 namespace = {}
-VERSION = '0.5.2'
+VERSION = '0.5.3'
 
 # Updater
 try:
@@ -105,7 +105,6 @@ def main():
                                         break
                                 else:
                                     inp += f'\n\t{ig}' if repr(inp).startswith('\t') else f'\n\t{ig}'
-                            print(inp)
                             execute(inp)
                             a = False
                         else:

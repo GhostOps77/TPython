@@ -1,5 +1,5 @@
 # Import libs
-import sys, subprocess
+import sys
 from os import system, name, get_terminal_size
 from traceback import format_exc
 from time import time
@@ -18,9 +18,9 @@ n = 1
 err = False
 a = False
 namespace = {}
-VERSION = '0.6'
+VERSION = '0.6.1'
 
-# Updater
+# Updater notifier
 try:
     pypi_json = get('https://pypi.org/pypi/TPython/json')
     pypi_json = pypi_json.json()
@@ -29,13 +29,6 @@ try:
         pypi_version = i
     if pypi_version != VERSION:
         print(f'{Fore.LIGHTCYAN_EX}Newer version of TPython is available: {Fore.LIGHTGREEN_EX}{pypi_version}')
-        CHOICE = input(f'{Fore.LIGHTCYAN_EX}Do you want to install {Fore.LIGHTGREEN_EX}{pypi_version}{Fore.LIGHTCYAN_EX} Y/n: {Fore.RESET}').lower().strip()
-        if CHOICE in ('y', 'yes', ''):
-            subprocess.run([sys.executable, '-m', 'pip', 'install', '--upgrade', 'TPython'])
-            sys.exit()
-except KeyboardInterrupt:
-    print(f'\n{Fore.LIGHTYELLOW_EX}KeyboardInterrupt')
-    sys.exit()
 except ConnectionError:
     pass
 

@@ -2,15 +2,15 @@
 TPython a better python REPL.
 
 ## Features
-- built-in clear/cls
-- colors
+- Built-in clear/cls
+- Colors
+- Update Notifier 
 
 ## Future Updates
-- Tab completion
-- More flexibility
-- Custom colors
+- Tab Completion
+- Custom Colors
 - Break Points
-- Better look
+- Ignore Exceptions
 
 ## Installation
 ```

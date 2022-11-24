@@ -1,18 +1,38 @@
 # Import libs
-import sys
+import sys, subprocess
 from os import system, name, get_terminal_size
 from traceback import format_exc
 try:
     from colorama import init as cinit, Fore
-except:
+except ModuleNotFoundError:
     sys.exit('module not found: colorama')
+try:
+    from requests import get, ConnectTimeout
+except ModuleNotFoundError:
+    sys.exit('module not found: requests')
 
 # Vars
 n = 1
 err = False
 a = False
 namespace = {}
-version = 0.4
+VERSION = '0.5'
+
+# Updater
+try:
+    pypi_json = get('https://pypi.org/pypi/TPython/json')
+    pypi_json = pypi_json.json()
+    pypi_version = None
+    for i in pypi_json['releases']:
+        pypi_version = i
+    if pypi_json != VERSION:
+        print(f'{Fore.LIGHTCYAN_EX}Newer version of TPython is available: {Fore.LIGHTGREEN_EX}{pypi_version}')
+        CHOICE = input(f'{Fore.LIGHTCYAN_EX}do you want to install {pypi_version} Y/n: {Fore.RESET}').lower().strip()
+        if CHOICE in ('y', ''):
+            subprocess.run([sys.executable, '-m', 'pip', 'install', '--upgrade', 'TPython'])
+            sys.exit()
+except ConnectTimeout:
+    pass
 
 # Main Function
 def main():
@@ -69,7 +89,7 @@ def main():
                         err = False
                     # Version command
                     elif inp == 'version':
-                        print(f'{Fore.LIGHTCYAN_EX}{version}')
+                        print(f'{Fore.LIGHTCYAN_EX}{VERSION}')
                     else:
                         # Statements that require indents eg: def, if
                         if inp.endswith(':'):

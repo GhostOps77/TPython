@@ -41,8 +41,8 @@ $ tpy
 ```
 **Mac OS/Linux/BSD**
 ```
-$ mkdir ~\.config\TPython
-$ curl https://raw.githubusercontent.com/Techlord210/TPython/main/config.jsonc -o ~\.config\TPython\config.jsonc
+$ mkdir ~/.config/TPython
+$ curl https://raw.githubusercontent.com/Techlord210/TPython/main/config.jsonc -o ~/.config/TPython/config.jsonc
 ```
 
 #### **Instructions**

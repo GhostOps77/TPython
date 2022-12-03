@@ -23,7 +23,7 @@ n = 1
 err = False
 a = False
 namespace = {}
-VERSION = '1.0'
+VERSION = '1.1'
 
 # Config
 read_file = True

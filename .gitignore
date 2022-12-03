@@ -1,5 +1,6 @@
 TPython.egg-info
 __pycache__
 dist
-update.bat
+*.bat
 build
+tmp

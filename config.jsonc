@@ -1,0 +1,101 @@
+// possible values for {config}: true, false
+// possible values for {colors}: cyan, green, red, yellow, white, blue, black, magenta
+// see https://github.com/Techlord210/TPython or https://pypi.org/project/TPython for config guide
+{
+    "version": "1.0",
+    "config": {
+        "notify_updates": true,
+        "welcome_msg": true,
+        "exit_msg": true,
+        "crash_msg": true
+    },
+    "colors": {
+        "update": {
+            // Newer version of TPython is available: 1.0
+            "text_color": "cyan",
+            "version_color": "green"
+        },
+        "welcome": {
+            // ----Welcome to TPython----
+            "text_color": "cyan",
+            "padding_color": "cyan"
+        },
+        "exit": {
+            "success": {
+                // -----Process Completed Successfully-----
+                "text_color": "cyan",
+                "padding_color": "cyan"
+            },
+            "crash": {
+                // -----------Crashed-------------
+                "text_color": "yellow",
+                "padding_color": "yellow"
+            }
+        },
+        "promot": {
+            "default": {
+                // [12]->
+
+                // '['12']'->
+                "sq_brackets": "green",
+                "number": {
+                    // ['12']->
+                    "normal": "white",
+                    "error": "red"
+                },
+                // [12]'-'>
+                "dash": "green",
+                // [12]-'>'
+                "arrow": "cyan",
+                "indent": {
+                    // [12]-> if True:
+                    // [::]->
+
+                    // '['::']'->
+                    "sq_brackets": "green",
+                    // ['::']->
+                    "number_replace": "yellow",
+                    // [::]'-'>
+                    "dash": "green",
+                    // [::]-'>'
+                    "arrow": "yellow"
+                }
+            },
+            "timeit": {
+                // [TimeTt]->
+
+                // '['TimeTt']'->
+                "sq_brackets": "green",
+                // ['TimeTt']->
+                "text_color": "white",
+                // [TimeTt]'-'>
+                "dash": "green",
+                // [TimeTt]-'>'
+                "arrow": "white",
+                "time_text": {
+                    // 'Execution time:' 0.054512
+                    "text_color": "green",
+                    // Execution time: '0.054512'
+                    "time_color": "yellow"
+                },
+                "indent": {
+                    // [TimeIt]-> if True:
+                    // [------]->
+
+                    // ['------']->
+                    "text_replace": "white",
+                    // '['------']'->
+                    "sq_brackets": "green",
+                    // [------]'-'>
+                    "dash": "green",
+                    // [------]-'>'
+                    "arrow": "white"
+                }
+            }
+        },
+        "error": {
+            "internal": "red",
+            "user": "red"
+        }
+    }
+}

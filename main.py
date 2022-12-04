@@ -55,13 +55,7 @@ if CONFIG['version'] == READER_VERSION:
         elif string == 'magenta':
             return Fore.LIGHTMAGENTA_EX
 
-    # def paser(config: dict):
-    #     for key, val in config:
-    #         if type(key) == str:
-    #             config[key] = color_replace(val)
-    #         elif type(key) == dict:
-    #             paser(config[key])
-    # paser(CONFIG['colors'])
+
     for key0, val0 in CONFIG.items():
         if type(val0) == dict and key0 != 'config':
             for key1, val1 in val0.items():

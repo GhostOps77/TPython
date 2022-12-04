@@ -1,5 +1,5 @@
 # Import libs
-import sys
+import sys, ast
 from os import system, name, get_terminal_size, path
 from traceback import format_exc
 from time import time
@@ -19,27 +19,25 @@ except ModuleNotFoundError:
     sys.exit('Module not found: requests')
 
 # Vars
-n = 1
-err = False
-a = False
-namespace = {}
-VERSION = '1.2'
+number: int = 1
+err: bool = False
+ind: bool = False
+namespace: dict = {}
+VERSION: str = '1.3'
 
 # Config
-read_file = True
-READER_VERSION = '1.0'
-CONFIG = {'version':'1.0','config': {'notify_updates': False, 'welcome_msg': True, 'exit_msg': True, 'crash_msg': True}, 'colors': {'update': {'text_color': Fore.LIGHTCYAN_EX, 'version_color': Fore.LIGHTGREEN_EX}, 'welcome': {'text_color': Fore.LIGHTCYAN_EX, 'padding_color': Fore.LIGHTCYAN_EX}, 'exit': {'success': {'text_color': Fore.LIGHTCYAN_EX, 'padding_color': Fore.LIGHTCYAN_EX}, 'crash': {'text_color': Fore.LIGHTYELLOW_EX, 'padding_color': Fore.LIGHTYELLOW_EX}}, 'promot': {'default': {'sq_brackets': Fore.LIGHTGREEN_EX, 'number': {'normal': Fore.LIGHTWHITE_EX, 'error': Fore.LIGHTRED_EX}, 'dash': Fore.LIGHTGREEN_EX, 'arrow': Fore.LIGHTCYAN_EX, 'indent': {'number_replace': Fore.LIGHTYELLOW_EX, 'sq_brackets': Fore.LIGHTGREEN_EX, 'dash': Fore.LIGHTGREEN_EX, 'arrow': Fore.LIGHTYELLOW_EX}}, 'timeit': {'sq_brackets': Fore.LIGHTGREEN_EX, 'text_color': Fore.LIGHTWHITE_EX, 'dash': Fore.LIGHTGREEN_EX, 'arrow': Fore.LIGHTWHITE_EX, 'time_text': {'text_color': Fore.LIGHTGREEN_EX, 'time_color': Fore.LIGHTYELLOW_EX}, 'indent': {'number_replace': Fore.LIGHTWHITE_EX, 'sq_brackets': Fore.LIGHTGREEN_EX, 'dash': Fore.LIGHTGREEN_EX, 'arrow': Fore.LIGHTWHITE_EX}}}, 'error': {'internal': Fore.LIGHTRED_EX, 'user': Fore.LIGHTRED_EX}}}
-CONFIG_PATH = path.abspath(path.expanduser('~/.config/TPython/config.jsonc'))
+READER_VERSION: str = '1.0'
+CONFIG = {'version':'1.0','config': {'notify_updates': False, 'welcome_msg': True, 'exit_msg': True, 'crash_msg': True}, 'colors': {'update': {'text_color': 'cyan', 'version_color': 'green'}, 'welcome': {'text_color': 'cyan', 'padding_color': 'cyan'}, 'exit': {'success': {'text_color': 'cyan', 'padding_color': 'cyan'}, 'crash': {'text_color': 'yellow', 'padding_color': 'yellow'}}, 'promot': {'default': {'sq_brackets': 'green', 'number': {'normal': 'white', 'error': 'red'}, 'dash': 'green', 'arrow': 'cyan', 'indent': {'number_replace': 'yellow', 'sq_brackets': 'green', 'dash': 'green', 'arrow': 'yellow'}}, 'timeit': {'sq_brackets': 'green', 'text_color': 'white', 'dash': 'green', 'arrow': 'white', 'time_text': {'text_color': 'green', 'time_color': 'yellow'}, 'indent': {'number_replace': 'white', 'sq_brackets': 'green', 'dash': 'green', 'arrow': 'white'}}}, 'error': {'internal': 'red', 'user': 'red'}}}
+CONFIG_PATH: str = path.abspath(path.expanduser('~/.config/TPython/config.jsonc'))
 
 if path.isfile(CONFIG_PATH):
     try:
         CONFIG = JsoncParser.parse_file(CONFIG_PATH)
     except ParserError:
         sys.exit(f'{Fore.LIGHTRED_EX}error loading {Fore.LIGHTYELLOW_EX}{CONFIG_PATH}')
-        read_file = False
 
-if CONFIG['version'] == READER_VERSION and read_file:
-    def color_replace(string):
+if CONFIG['version'] == READER_VERSION:
+    def color_replace(string: str) -> str | None:
         if string == 'cyan':
             return Fore.LIGHTCYAN_EX
         elif string == 'green':
@@ -57,6 +55,13 @@ if CONFIG['version'] == READER_VERSION and read_file:
         elif string == 'magenta':
             return Fore.LIGHTMAGENTA_EX
 
+    # def paser(config: dict):
+    #     for key, val in config:
+    #         if type(key) == str:
+    #             config[key] = color_replace(val)
+    #         elif type(key) == dict:
+    #             paser(config[key])
+    # paser(CONFIG['colors'])
     for key0, val0 in CONFIG.items():
         if type(val0) == dict and key0 != 'config':
             for key1, val1 in val0.items():
@@ -74,30 +79,30 @@ if CONFIG['version'] == READER_VERSION and read_file:
                                     for key4, val4 in val3.items():
                                         if type(val4) == str:
                                             CONFIG[key0][key1][key2][key3][key4] = color_replace(val4)
-
-    INP_COLORS = CONFIG['colors']['promot']['default']
-    INP_COLORS_INDENT = CONFIG['colors']['promot']['default']['indent']
-    TNP_COLORS = CONFIG['colors']['promot']['timeit']
-    TNP_COLORS_INDENT = CONFIG['colors']['promot']['timeit']['indent']
-
-    # Update notifier
-    if CONFIG['config']['notify_updates']:
-        try:
-            pypi_json = get('https://pypi.org/pypi/TPython/json')
-            pypi_json = pypi_json.json()
-            pypi_version = None
-            for i in pypi_json['releases']:
-                pypi_version = i
-            if pypi_version != VERSION:
-                print(f'{CONFIG["colors"]["update"]["text_color"]}Newer version of TPython is available: {CONFIG["colors"]["update"]["version_color"]}{pypi_version}')
-        except ConnectionError:
-            pass
 else:
     sys.exit(f"{Fore.LIGHTRED_EX}config file version '{Fore.LIGHTYELLOW_EX}{CONFIG['version']}{Fore.LIGHTRED_EX}' don't match with reader '{Fore.LIGHTYELLOW_EX}{READER_VERSION}{Fore.LIGHTRED_EX}'")
 
+INP_COLORS = CONFIG['colors']['promot']['default']
+INP_COLORS_INDENT = CONFIG['colors']['promot']['default']['indent']
+TNP_COLORS = CONFIG['colors']['promot']['timeit']
+TNP_COLORS_INDENT = CONFIG['colors']['promot']['timeit']['indent']
+
+# Update notifier
+if CONFIG['config']['notify_updates']:
+    try:
+        pypi_json = get('https://pypi.org/pypi/TPython/json')
+        pypi_json = pypi_json.json()
+        pypi_version = None
+        for i in pypi_json['releases']:
+            pypi_version = i
+        if pypi_version != VERSION:
+            print(f'{CONFIG["colors"]["update"]["text_color"]}Newer version of TPython is available: {CONFIG["colors"]["update"]["version_color"]}{pypi_version}')
+    except ConnectionError:
+        pass
+
 # Entry point
 def main():
-    global n, err, a
+    global number, err, ind
 
     # exit function
     def ext(crash=False):
@@ -121,7 +126,7 @@ def main():
     try:
         # execute function
         def execute(inp, timeit=False):
-            global err, n
+            global err, number
             run = False
             before = 0
             if timeit:
@@ -142,7 +147,7 @@ def main():
                     err = True
             if timeit:
                 print(f'{TNP_COLORS["time_text"]["text_color"]}Execution time: {TNP_COLORS["time_text"]["time_color"]}{time()-before}')
-            n += 1
+            number += 1
 
         # Welcome message
         if CONFIG['config']['welcome_msg']:
@@ -156,7 +161,9 @@ def main():
         # Input
         while True:
             try:
-                inp = input(f'{INP_COLORS["sq_brackets"]}[{INP_COLORS["number"]["error" if err else "normal"]}{n}{INP_COLORS["sq_brackets"]}]{INP_COLORS["dash"]}-{INP_COLORS["arrow"]}> {Fore.LIGHTWHITE_EX}')
+                indent = False
+                indent_t = False
+                inp = input(f'{INP_COLORS["sq_brackets"]}[{INP_COLORS["number"]["error" if err else "normal"]}{number}{INP_COLORS["sq_brackets"]}]{INP_COLORS["dash"]}-{INP_COLORS["arrow"]}> {Fore.LIGHTWHITE_EX}')
                 if not (inp.isspace() or inp == ''):
                     inp = inp.strip()
                     # Exit command
@@ -172,37 +179,45 @@ def main():
                     elif inp == 'timeit' and not 'timeit' in namespace:
                         while True:
                             tnp = input(f'{TNP_COLORS["sq_brackets"]}[{TNP_COLORS["text_color"]}TimeIt{TNP_COLORS["sq_brackets"]}]{TNP_COLORS["dash"]}-{TNP_COLORS["arrow"]}> {Fore.LIGHTWHITE_EX}').strip()
-                            if tnp.endswith(':'):
+                            try:
+                                ast.parse(inp)
+                            except SyntaxError:
+                                indent_t = True
+                            if indent_t:
                                 # Statements that require indents eg: def, if
                                 while True:
                                     indent = input(f'{TNP_COLORS_INDENT["sq_brackets"]}[{TNP_COLORS_INDENT["text_replace"]}------{TNP_COLORS_INDENT["sq_brackets"]}]{TNP_COLORS_INDENT["dash"]}-{TNP_COLORS_INDENT["arrow"]}> {Fore.LIGHTWHITE_EX}')
                                     if indent.strip() == '':
-                                        if not a:
-                                            a = True
+                                        if not ind:
+                                            ind = True
                                         else:
                                             break
                                     else:
-                                        tnp += f'\n\t{indent}' if repr(tnp).startswith('\t') else f'\n\t{indent}'
+                                        tnp += f'\n\t{indent}'
                                 execute(tnp, True)
-                                a = False
+                                ind = False
                                 break
                             else:
                                 execute(tnp, True)
                                 break
                     else:
-                        # Statements that require indents eg: def, if
-                        if inp.endswith(':'):
+                        # Indents
+                        try:
+                            ast.parse(inp)
+                        except SyntaxError:
+                            indent = True
+                        if indent:
                             while True:
-                                indent = input(f'{INP_COLORS_INDENT["sq_brackets"]}[{INP_COLORS_INDENT["number_replace"]}{":"*len(str(n))}{INP_COLORS_INDENT["sq_brackets"]}]{INP_COLORS_INDENT["dash"]}-{INP_COLORS_INDENT["arrow"]}> {Fore.LIGHTWHITE_EX}')
+                                indent = input(f'{INP_COLORS_INDENT["sq_brackets"]}[{INP_COLORS_INDENT["number_replace"]}{":"*len(str(number))}{INP_COLORS_INDENT["sq_brackets"]}]{INP_COLORS_INDENT["dash"]}-{INP_COLORS_INDENT["arrow"]}> {Fore.LIGHTWHITE_EX}')
                                 if indent.strip() == '':
-                                    if not a:
-                                        a = True
+                                    if not ind:
+                                        ind = True
                                     else:
                                         break
                                 else:
-                                    inp += f'\n\t{indent}' if repr(inp).startswith('\t') else f'\n\t{indent}'
+                                    inp += f'\n\t{indent}'
                             execute(inp)
-                            a = False
+                            ind = False
                         else:
                             execute(inp)
             except KeyboardInterrupt:

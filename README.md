@@ -18,12 +18,12 @@ $ pip install TPython
 
 ## Usage
 
-### Run
+### **Run**
 ```
 $ tpy
 ```
 
-### Built-in Commands
+### **Built-in Commands**
 | Command | Function |
 | :-------: | :--------: |
 | version | tells version |
@@ -31,7 +31,7 @@ $ tpy
 | cls/clear | clears the terminal |
 | timeit | tells execution time of code |
 
-### Config
+### **Config**
 
 #### **Create File**
 **Windows:**
@@ -39,7 +39,7 @@ $ tpy
 > mkdir %USERPROFILE%\.config\TPython
 > curl https://raw.githubusercontent.com/Techlord210/TPython/main/config.jsonc -o %USERPROFILE%\.config\TPython\config.jsonc
 ```
-**Mac OS/Linux/BSD**
+**Mac OS/Linux/BSD:**
 ```
 $ mkdir ~/.config/TPython
 $ curl https://raw.githubusercontent.com/Techlord210/TPython/main/config.jsonc -o ~/.config/TPython/config.jsonc

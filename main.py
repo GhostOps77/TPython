@@ -23,7 +23,7 @@ number: int = 1
 err: bool = False
 ind: bool = False
 namespace: dict = {}
-VERSION: str = '1.3'
+VERSION: str = '1.4'
 
 # Config
 READER_VERSION: str = '1.0'
@@ -37,42 +37,24 @@ if path.isfile(CONFIG_PATH):
         sys.exit(f'{Fore.LIGHTRED_EX}error loading {Fore.LIGHTYELLOW_EX}{CONFIG_PATH}')
 
 if CONFIG['version'] == READER_VERSION:
-    def color_replace(string: str) -> str | None:
-        if string == 'cyan':
-            return Fore.LIGHTCYAN_EX
-        elif string == 'green':
-            return Fore.LIGHTGREEN_EX
-        elif string == 'red':
-            return Fore.LIGHTRED_EX
-        elif string == 'yellow':
-            return Fore.LIGHTYELLOW_EX
-        elif string == 'white':
-            return Fore.LIGHTWHITE_EX
-        elif string == 'blue':
-            return Fore.LIGHTBLUE_EX
-        elif string == 'black':
-            return Fore.LIGHTBLACK_EX
-        elif string == 'magenta':
-            return Fore.LIGHTMAGENTA_EX
-
-
-    for key0, val0 in CONFIG.items():
-        if type(val0) == dict and key0 != 'config':
-            for key1, val1 in val0.items():
-                if type(val1) == str:
-                    CONFIG[key0][key1] = color_replace(val1)
-                elif type(val1) == dict:
-                    for key2, val2 in val1.items():
-                        if type(val2) == str:
-                            CONFIG[key0][key1][key2] = color_replace(val2)
-                        elif type(val2) == dict:
-                            for key3, val3 in val2.items():
-                                if type(val3) == str:
-                                    CONFIG[key0][key1][key2][key3] = color_replace(val3)
-                                elif type(val3) == dict:
-                                    for key4, val4 in val3.items():
-                                        if type(val4) == str:
-                                            CONFIG[key0][key1][key2][key3][key4] = color_replace(val4)
+    def color_to_code(config: dict) -> dict:
+        COLORS = {
+            "cyan": Fore.LIGHTCYAN_EX,
+            "green":Fore.LIGHTGREEN_EX,
+            "red": Fore.LIGHTRED_EX,
+            "yellow": Fore.LIGHTYELLOW_EX,
+            "white": Fore.LIGHTWHITE_EX,
+            "blue": Fore.LIGHTBLUE_EX,
+            "black": Fore.LIGHTBLACK_EX,
+            "magenta": Fore.LIGHTMAGENTA_EX
+        }
+        for key, val in config.items():
+            if type(val) == dict:
+                color_to_code(config[key])
+            else:
+                config[key] = COLORS.get(val, Fore.WHITE)
+        return config
+    color_to_code(CONFIG['colors'])
 else:
     sys.exit(f"{Fore.LIGHTRED_EX}config file version '{Fore.LIGHTYELLOW_EX}{CONFIG['version']}{Fore.LIGHTRED_EX}' don't match with reader '{Fore.LIGHTYELLOW_EX}{READER_VERSION}{Fore.LIGHTRED_EX}'")
 

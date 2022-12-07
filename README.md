@@ -9,7 +9,6 @@ TPython a better python REPL.
 
 ## Future Updates
 - Tab Completion
-- Break Points
 
 ## Installation
 ```

@@ -2,7 +2,7 @@ from setuptools import setup
 
 with open('README.md', 'r') as f:
     LD = f.read()
-VERSION = '1.4'
+VERSION = '1.5'
 
 if __name__ == '__main__':
     setup(
@@ -37,7 +37,7 @@ if __name__ == '__main__':
         ],
     entry_points={
         'console_scripts':[
-            'tpy = main:main'
+            'tpy = tpy.tpy:main'
             ]
         },
     python_requires=">=3.6"

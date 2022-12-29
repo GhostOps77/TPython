@@ -23,24 +23,27 @@ number: int = 1
 err: bool = False
 ind: bool = False
 namespace: dict = {}
-VERSION: str = '1.4'
+VERSION: str = '1.5'
 
 # Config
 READER_VERSION: str = '1.0'
-CONFIG = {'version':'1.0','config': {'notify_updates': False, 'welcome_msg': True, 'exit_msg': True, 'crash_msg': True}, 'colors': {'update': {'text_color': 'cyan', 'version_color': 'green'}, 'welcome': {'text_color': 'cyan', 'padding_color': 'cyan'}, 'exit': {'success': {'text_color': 'cyan', 'padding_color': 'cyan'}, 'crash': {'text_color': 'yellow', 'padding_color': 'yellow'}}, 'promot': {'default': {'sq_brackets': 'green', 'number': {'normal': 'white', 'error': 'red'}, 'dash': 'green', 'arrow': 'cyan', 'indent': {'number_replace': 'yellow', 'sq_brackets': 'green', 'dash': 'green', 'arrow': 'yellow'}}, 'timeit': {'sq_brackets': 'green', 'text_color': 'white', 'dash': 'green', 'arrow': 'white', 'time_text': {'text_color': 'green', 'time_color': 'yellow'}, 'indent': {'number_replace': 'white', 'sq_brackets': 'green', 'dash': 'green', 'arrow': 'white'}}}, 'error': {'internal': 'red', 'user': 'red'}}}
-CONFIG_PATH: str = path.abspath(path.expanduser('~/.config/TPython/config.jsonc'))
+## Consider reading https://github.com/Techlord210/TPython/blob/main/config.jsonc instead its just the defualt config.
+CONFIG = {'version':'1.0','config': {'notify_updates': False, 'welcome_msg': True, 'exit_msg': True, 'crash_msg': True}, 'colors': {'update': {'text_color': Fore.LIGHTCYAN_EX, 'version_color': Fore.LIGHTGREEN_EX}, 'welcome': {'text_color': Fore.LIGHTCYAN_EX, 'padding_color': Fore.LIGHTCYAN_EX}, 'exit': {'success': {'text_color': Fore.LIGHTCYAN_EX, 'padding_color': Fore.LIGHTCYAN_EX}, 'crash': {'text_color': Fore.LIGHTYELLOW_EX, 'padding_color': Fore.LIGHTYELLOW_EX}}, 'promot': {'default': {'sq_brackets': Fore.LIGHTGREEN_EX, 'number': {'normal': Fore.LIGHTWHITE_EX, 'error': Fore.LIGHTRED_EX}, 'dash': Fore.LIGHTGREEN_EX, 'arrow': Fore.LIGHTCYAN_EX, 'indent': {'number_replace': Fore.LIGHTYELLOW_EX, 'sq_brackets': Fore.LIGHTGREEN_EX, 'dash': Fore.LIGHTGREEN_EX, 'arrow': Fore.LIGHTYELLOW_EX}}, 'timeit': {'sq_brackets': Fore.LIGHTGREEN_EX, 'text_color': Fore.LIGHTWHITE_EX, 'dash': Fore.LIGHTGREEN_EX, 'arrow': Fore.LIGHTWHITE_EX, 'time_text': {'text_color': Fore.LIGHTGREEN_EX, 'time_color': Fore.LIGHTYELLOW_EX}, 'indent': {'number_replace': Fore.LIGHTWHITE_EX, 'sq_brackets': Fore.LIGHTGREEN_EX, 'dash': Fore.LIGHTGREEN_EX, 'arrow': Fore.LIGHTWHITE_EX}}}, 'error': {'internal': Fore.LIGHTRED_EX, 'user': Fore.LIGHTRED_EX}}}
+CONFIG_PATH: str = path.abspath(path.expanduser('~/.TPython/config.jsonc'))
+READ_FILE = False
 
 if path.isfile(CONFIG_PATH):
     try:
         CONFIG = JsoncParser.parse_file(CONFIG_PATH)
+        READ_FILE = True
     except ParserError:
         sys.exit(f'{Fore.LIGHTRED_EX}error loading {Fore.LIGHTYELLOW_EX}{CONFIG_PATH}')
 
 if CONFIG['version'] == READER_VERSION:
-    def color_to_code(config: dict) -> dict:
+    if READ_FILE:
         COLORS = {
             "cyan": Fore.LIGHTCYAN_EX,
-            "green":Fore.LIGHTGREEN_EX,
+            "green": Fore.LIGHTGREEN_EX,
             "red": Fore.LIGHTRED_EX,
             "yellow": Fore.LIGHTYELLOW_EX,
             "white": Fore.LIGHTWHITE_EX,
@@ -48,13 +51,14 @@ if CONFIG['version'] == READER_VERSION:
             "black": Fore.LIGHTBLACK_EX,
             "magenta": Fore.LIGHTMAGENTA_EX
         }
-        for key, val in config.items():
-            if type(val) == dict:
-                color_to_code(config[key])
-            else:
-                config[key] = COLORS.get(val, Fore.WHITE)
-        return config
-    color_to_code(CONFIG['colors'])
+        def color_to_code(config: dict) -> dict:
+            for key, val in config.items():
+                if type(val) == dict:
+                    color_to_code(config[key])
+                else:
+                    config[key] = COLORS.get(val, Fore.WHITE)
+            return config
+        color_to_code(CONFIG['colors'])
 else:
     sys.exit(f"{Fore.LIGHTRED_EX}config file version '{Fore.LIGHTYELLOW_EX}{CONFIG['version']}{Fore.LIGHTRED_EX}' don't match with reader '{Fore.LIGHTYELLOW_EX}{READER_VERSION}{Fore.LIGHTRED_EX}'")
 
@@ -66,11 +70,8 @@ TNP_COLORS_INDENT = CONFIG['colors']['promot']['timeit']['indent']
 # Update notifier
 if CONFIG['config']['notify_updates']:
     try:
-        pypi_json = get('https://pypi.org/pypi/TPython/json')
-        pypi_json = pypi_json.json()
-        pypi_version = None
-        for i in pypi_json['releases']:
-            pypi_version = i
+        pypi_json = get('https://pypi.org/pypi/TPython/json').json()
+        pypi_version = pypi_json['info']['version']
         if pypi_version != VERSION:
             print(f'{CONFIG["colors"]["update"]["text_color"]}Newer version of TPython is available: {CONFIG["colors"]["update"]["version_color"]}{pypi_version}')
     except ConnectionError:

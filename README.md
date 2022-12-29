@@ -15,6 +15,13 @@ TPython a better python REPL.
 $ pip install TPython
 ```
 
+## Dependencies
+```
+colorama
+jsonc_parser
+requests
+```
+
 ## Usage
 
 ### **Run**
@@ -35,13 +42,13 @@ $ tpy
 #### **Create File**
 **Windows:**
 ```
-> mkdir %USERPROFILE%\.config\TPython
-> curl https://raw.githubusercontent.com/Techlord210/TPython/main/config.jsonc -o %USERPROFILE%\.config\TPython\config.jsonc
+> mkdir %USERPROFILE%\.TPython
+> curl https://raw.githubusercontent.com/Techlord210/TPython/main/config.jsonc -o %USERPROFILE%\.TPython\config.jsonc
 ```
 **Mac OS/Linux/BSD:**
 ```
-$ mkdir ~/.config/TPython
-$ curl https://raw.githubusercontent.com/Techlord210/TPython/main/config.jsonc -o ~/.config/TPython/config.jsonc
+$ mkdir ~/.TPython
+$ curl https://raw.githubusercontent.com/Techlord210/TPython/main/config.jsonc -o ~/.TPython/config.jsonc
 ```
 
 #### **Instructions**

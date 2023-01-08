@@ -7,9 +7,6 @@ TPython a better python REPL.
 - Update Notifier 
 - Custom Config
 
-## Future Updates
-- Tab Completion
-
 ## Installation
 ```
 $ pip install TPython
@@ -52,8 +49,7 @@ $ curl https://raw.githubusercontent.com/Techlord210/TPython/main/config.jsonc -
 ```
 
 #### **Instructions**
-- File location: `~/.config/TPython/config.jsonc`
+- File location: `~/.TPython/config.jsonc`
 - Read all the comments in config file.
-- Do not remove/edit any keys from config file.
 - Do not use uppercase in config file.
 - Do not use Spaces in values of config file.

@@ -203,3 +203,5 @@ def main():
     except Exception:
         print(f'\n{Fore.LIGHTRED_EX}{format_exc()}')
         ext(True)
+        
+main()

@@ -1,8 +1,9 @@
 # Import libs
-import sys, ast
+import sys
+import ast
 from os import system, name, get_terminal_size, path
 from traceback import format_exc
-from time import time
+from time import perf_counter
 try:
     from jsonc_parser.errors import ParserError
     from jsonc_parser.parser import JsoncParser
@@ -23,7 +24,7 @@ number: int = 1
 err: bool = False
 ind: bool = False
 namespace: dict = {}
-VERSION: str = '1.5'
+VERSION: str = '1.6'
 
 # Config
 READER_VERSION: str = '1.0'
@@ -78,11 +79,11 @@ if CONFIG['config']['notify_updates']:
         pass
 
 # Entry point
-def main():
+def main() -> None:
     global number, err, ind
 
     # exit function
-    def ext(crash=False):
+    def ext(crash=False) -> None:
         cl = get_terminal_size().columns
         crash_m = 'Crashed'
         success_m = 'Process Completed Successfully'
@@ -102,12 +103,12 @@ def main():
 
     try:
         # execute function
-        def execute(inp, timeit=False):
+        def execute(inp, timeit=False) -> None:
             global err, number
             run = False
             before = 0
             if timeit:
-                before = time()
+                before = perf_counter()
             try:
                 e = eval(inp, namespace)
                 if e != None:
@@ -123,7 +124,7 @@ def main():
                     print(f'{CONFIG["colors"]["error"]["user"]}{format_exc()}')
                     err = True
             if timeit:
-                print(f'{TNP_COLORS["time_text"]["text_color"]}Execution time: {TNP_COLORS["time_text"]["time_color"]}{time()-before}')
+                print(f'{TNP_COLORS["time_text"]["text_color"]}Execution time: {TNP_COLORS["time_text"]["time_color"]}{perf_counter()-before}')
             number += 1
 
         # Welcome message
@@ -203,5 +204,3 @@ def main():
     except Exception:
         print(f'\n{Fore.LIGHTRED_EX}{format_exc()}')
         ext(True)
-        
-main()

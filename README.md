@@ -16,7 +16,6 @@ $ pip install TPython
 ```
 colorama
 jsonc_parser
-requests
 ```
 
 ## Usage
@@ -24,6 +23,8 @@ requests
 ### **Run**
 ```
 $ tpy
+Or
+$ python3 -m tpy
 ```
 
 ### **Built-in Commands**

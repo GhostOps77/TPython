@@ -1,39 +1,39 @@
 # Import libs
-import sys
 import ast
-from os import system, name, get_terminal_size, path
-from traceback import format_exc
+import json
+import os
+import sys
+import urllib.request
+import urllib.error
 from time import perf_counter
+from traceback import format_exc
+
 try:
     from jsonc_parser.errors import ParserError
     from jsonc_parser.parser import JsoncParser
 except ModuleNotFoundError:
     sys.exit('Module not found: jsonc_parser')
 try:
-    from colorama import init, Fore
+    from colorama import Fore, init
     init(autoreset=True)
 except ModuleNotFoundError:
     sys.exit('Module not found: colorama')
-try:
-    from requests import get, ConnectionError
-except ModuleNotFoundError:
-    sys.exit('Module not found: requests')
 
 # Vars
 number: int = 1
 err: bool = False
 ind: bool = False
 namespace: dict = {}
-VERSION: str = '1.6'
+VERSION: str = '1.7'
 
 # Config
 READER_VERSION: str = '1.0'
-## Consider reading https://github.com/Techlord210/TPython/blob/main/config.jsonc instead its just the defualt config.
-CONFIG = {'version':'1.0','config': {'notify_updates': False, 'welcome_msg': True, 'exit_msg': True, 'crash_msg': True}, 'colors': {'update': {'text_color': Fore.LIGHTCYAN_EX, 'version_color': Fore.LIGHTGREEN_EX}, 'welcome': {'text_color': Fore.LIGHTCYAN_EX, 'padding_color': Fore.LIGHTCYAN_EX}, 'exit': {'success': {'text_color': Fore.LIGHTCYAN_EX, 'padding_color': Fore.LIGHTCYAN_EX}, 'crash': {'text_color': Fore.LIGHTYELLOW_EX, 'padding_color': Fore.LIGHTYELLOW_EX}}, 'promot': {'default': {'sq_brackets': Fore.LIGHTGREEN_EX, 'number': {'normal': Fore.LIGHTWHITE_EX, 'error': Fore.LIGHTRED_EX}, 'dash': Fore.LIGHTGREEN_EX, 'arrow': Fore.LIGHTCYAN_EX, 'indent': {'number_replace': Fore.LIGHTYELLOW_EX, 'sq_brackets': Fore.LIGHTGREEN_EX, 'dash': Fore.LIGHTGREEN_EX, 'arrow': Fore.LIGHTYELLOW_EX}}, 'timeit': {'sq_brackets': Fore.LIGHTGREEN_EX, 'text_color': Fore.LIGHTWHITE_EX, 'dash': Fore.LIGHTGREEN_EX, 'arrow': Fore.LIGHTWHITE_EX, 'time_text': {'text_color': Fore.LIGHTGREEN_EX, 'time_color': Fore.LIGHTYELLOW_EX}, 'indent': {'number_replace': Fore.LIGHTWHITE_EX, 'sq_brackets': Fore.LIGHTGREEN_EX, 'dash': Fore.LIGHTGREEN_EX, 'arrow': Fore.LIGHTWHITE_EX}}}, 'error': {'internal': Fore.LIGHTRED_EX, 'user': Fore.LIGHTRED_EX}}}
-CONFIG_PATH: str = path.abspath(path.expanduser('~/.TPython/config.jsonc'))
+# Consider reading https://github.com/Techlord210/TPython/blob/main/config.jsonc instead its just the defualt configuration dict.
+CONFIG = {'version': '1.0', 'config': {'notify_updates': True, 'welcome_msg': True, 'exit_msg': True, 'crash_msg': True}, 'colors': {'update': {'text_color': Fore.LIGHTCYAN_EX, 'version_color': Fore.LIGHTGREEN_EX}, 'welcome': {'text_color': Fore.LIGHTCYAN_EX, 'padding_color': Fore.LIGHTCYAN_EX}, 'exit': {'success': {'text_color': Fore.LIGHTCYAN_EX, 'padding_color': Fore.LIGHTCYAN_EX}, 'crash': {'text_color': Fore.LIGHTYELLOW_EX, 'padding_color': Fore.LIGHTYELLOW_EX}}, 'promot': {'default': {'sq_brackets': Fore.LIGHTGREEN_EX, 'number': {'normal': Fore.LIGHTWHITE_EX, 'error': Fore.LIGHTRED_EX}, 'dash': Fore.LIGHTGREEN_EX,'arrow': Fore.LIGHTCYAN_EX, 'indent': {'number_replace': Fore.LIGHTYELLOW_EX, 'sq_brackets': Fore.LIGHTGREEN_EX, 'dash': Fore.LIGHTGREEN_EX, 'arrow': Fore.LIGHTYELLOW_EX}}, 'timeit': {'sq_brackets': Fore.LIGHTGREEN_EX, 'text_color': Fore.LIGHTWHITE_EX, 'dash': Fore.LIGHTGREEN_EX, 'arrow': Fore.LIGHTWHITE_EX, 'time_text': {'text_color': Fore.LIGHTGREEN_EX, 'time_color': Fore.LIGHTYELLOW_EX}, 'indent': {'number_replace': Fore.LIGHTWHITE_EX, 'sq_brackets': Fore.LIGHTGREEN_EX, 'dash': Fore.LIGHTGREEN_EX, 'arrow': Fore.LIGHTWHITE_EX}}}, 'error': {'internal': Fore.LIGHTRED_EX, 'user': Fore.LIGHTRED_EX}}}
+CONFIG_PATH: str = os.path.abspath(os.path.expanduser('~/.TPython/config.jsonc'))
 READ_FILE = False
 
-if path.isfile(CONFIG_PATH):
+if os.path.isfile(CONFIG_PATH):
     try:
         CONFIG = JsoncParser.parse_file(CONFIG_PATH)
         READ_FILE = True
@@ -52,6 +52,7 @@ if CONFIG['version'] == READER_VERSION:
             "black": Fore.LIGHTBLACK_EX,
             "magenta": Fore.LIGHTMAGENTA_EX
         }
+
         def color_to_code(config: dict) -> dict:
             for key, val in config.items():
                 if type(val) == dict:
@@ -71,11 +72,12 @@ TNP_COLORS_INDENT = CONFIG['colors']['promot']['timeit']['indent']
 # Update notifier
 if CONFIG['config']['notify_updates']:
     try:
-        pypi_json = get('https://pypi.org/pypi/TPython/json').json()
+        response = urllib.request.urlopen('https://pypi.org/pypi/TPython/json')
+        pypi_json = json.load(response)
         pypi_version = pypi_json['info']['version']
         if pypi_version != VERSION:
             print(f'{CONFIG["colors"]["update"]["text_color"]}Newer version of TPython is available: {CONFIG["colors"]["update"]["version_color"]}{pypi_version}')
-    except ConnectionError:
+    except urllib.error.URLError:
         pass
 
 # Entry point
@@ -83,36 +85,36 @@ def main() -> None:
     global number, err, ind
 
     # exit function
-    def ext(crash=False) -> None:
-        cl = get_terminal_size().columns
+    def ext(crash: bool=False) -> None:
+        columns = os.get_terminal_size().columns
         crash_m = 'Crashed'
         success_m = 'Process Completed Successfully'
         if crash:
             if CONFIG['config']['crash_msg']:
-                m = crash_m
-                for i in range((cl-len(crash_m))//2):
-                    m = f'{CONFIG["colors"]["exit"]["crash"]["padding_color"]}-{CONFIG["colors"]["exit"]["crash"]["text_color"]}{m}{CONFIG["colors"]["exit"]["crash"]["padding_color"]}-'
-                sys.exit(f'{m}')
+                msg = crash_m
+                for i in range((columns-len(crash_m))//2):
+                    msg = f'{CONFIG["colors"]["exit"]["crash"]["padding_color"]}-{CONFIG["colors"]["exit"]["crash"]["text_color"]}{msg}{CONFIG["colors"]["exit"]["crash"]["padding_color"]}-'
+                sys.exit(f'{msg}')
         else:
             if CONFIG['config']['exit_msg']:
-                m = success_m
-                for i in range((cl-len(success_m))//2):
-                    m = f'{CONFIG["colors"]["exit"]["success"]["padding_color"]}-{CONFIG["colors"]["exit"]["success"]["text_color"]}{m}{CONFIG["colors"]["exit"]["success"]["padding_color"]}-'
-                print(f'{m}')
+                msg = success_m
+                for i in range((columns-len(success_m))//2):
+                    msg = f'{CONFIG["colors"]["exit"]["success"]["padding_color"]}-{CONFIG["colors"]["exit"]["success"]["text_color"]}{msg}{CONFIG["colors"]["exit"]["success"]["padding_color"]}-'
+                print(f'{msg}')
             sys.exit()
 
     try:
         # execute function
-        def execute(inp, timeit=False) -> None:
+        def execute(inp: str, timeit: bool=False) -> None:
             global err, number
             run = False
             before = 0
             if timeit:
                 before = perf_counter()
             try:
-                e = eval(inp, namespace)
-                if e != None:
-                    print(repr(e))
+                eval_return = eval(inp, namespace)
+                if eval_return != None:
+                    print(repr(eval_return))
                 err = False
             except:
                 run = True
@@ -129,12 +131,12 @@ def main() -> None:
 
         # Welcome message
         if CONFIG['config']['welcome_msg']:
-            cl = get_terminal_size().columns
-            m = 'Welcome to TPython'
-            cl -= 18
-            for i in range(cl//2):
-                m = f'{CONFIG["colors"]["welcome"]["padding_color"]}-{CONFIG["colors"]["welcome"]["text_color"]}{m}{CONFIG["colors"]["welcome"]["padding_color"]}-'
-            print(f'{m}')
+            columns = os.get_terminal_size().columns
+            msg = 'Welcome to TPython'
+            columns -= 18
+            for i in range(columns//2):
+                msg = f'{CONFIG["colors"]["welcome"]["padding_color"]}-{CONFIG["colors"]["welcome"]["text_color"]}{msg}{CONFIG["colors"]["welcome"]["padding_color"]}-'
+            print(f'{msg}')
 
         # Input
         while True:
@@ -148,7 +150,7 @@ def main() -> None:
                     if inp in ('exit', 'quit', 'close'):
                         ext()
                     elif inp in ('clear', 'cls') and not ('clear' in namespace or 'cls' in namespace):
-                        system('cls' if name == 'nt' else 'clear')
+                        os.system('cls' if os.name == 'nt' else 'clear')
                         err = False
                     # Version command
                     elif inp == 'version' and not 'version' in namespace:

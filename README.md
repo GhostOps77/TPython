@@ -25,6 +25,12 @@ jsonc_parser
 $ tpy
 Or
 $ python3 -m tpy
+Or
+$ python3
+Python ... (...) [...] on ...
+Type "help", "copyright", "credits" or "license" for more information.
+>>> import tpy
+>>> tpy.main()
 ```
 
 ### **Built-in Commands**

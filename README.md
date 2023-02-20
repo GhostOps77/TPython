@@ -1,11 +1,23 @@
-# TPython
+# **TPython**
 TPython a better python REPL.
+### [Github](https://github.com/Techlord210/TPython) | [PyPi](https://pypi.org/project/TPython/)
+
+## **config.jsonc changelog**
+```jsonc
+// Removed
+{
+        "error": {
+            "internal": "red",
+            "user": "red"
+        }
+}
+```
 
 ## Features
 - Built-in TimeIt, clear/cls
 - Colors
 - Update Notifier 
-- Custom Config
+- Flexible
 
 ## Installation
 ```
@@ -18,30 +30,31 @@ colorama
 jsonc_parser
 ```
 
-## Usage
+## **Usage**
 
 ### **Run**
 ```
 $ tpy
-Or
+```
+### or
+```
 $ python3 -m tpy
-Or
-$ python3
-Python ... (...) [...] on ...
-Type "help", "copyright", "credits" or "license" for more information.
->>> import tpy
->>> tpy.main()
+```
+### or
+```py
+import tpy
+tpy.main()
 ```
 
 ### **Built-in Commands**
-| Command | Function |
-| :-------: | :--------: |
-| version | tells version |
-| exit/quit/close | exits the REPL |
-| cls/clear | clears the terminal |
-| timeit | tells execution time of code |
+|     Command     |          Function            |
+| :-------------: | :--------------------------: |
+|     version     |    Tells current version     |
+| exit/quit/close |          Exits REPL          |
+|    cls/clear    |     Clears the terminal      |
+|     timeit      | Tells execution time of code |
 
-### **Config**
+### **Configuration**
 
 #### **Create File**
 **Windows:**
@@ -57,6 +70,5 @@ $ curl https://raw.githubusercontent.com/Techlord210/TPython/main/config.jsonc -
 
 #### **Instructions**
 - File location: `~/.TPython/config.jsonc`
-- Read all the comments in config file.
-- Do not use uppercase in config file.
+- Config file is case-sensetive.
 - Do not use Spaces in values of config file.

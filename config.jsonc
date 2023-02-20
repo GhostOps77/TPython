@@ -1,8 +1,10 @@
-// possible values for {config}: true, false
-// possible values for {colors}: cyan, green, red, yellow, white, blue, black, magenta
-// see https://github.com/Techlord210/TPython or https://pypi.org/project/TPython for config guide
+/*
+possible values for {config}: true, false
+possible values for {colors}: cyan, green, red, yellow, white, blue, black, magenta
+see https://github.com/Techlord210/TPython or https://pypi.org/project/TPython for config guide
+*/  
 {
-    "version": "1.0",
+    "version": "1.1",
     "config": {
         "notify_updates": true,
         "welcome_msg": true,

@@ -23,7 +23,7 @@ cell_number: int = 1
 err: bool = False
 ind: bool = False
 namespace: dict = {'__builtins__': __builtins__, '__name__': '__main__', '__doc__': 'Automatically created module for TPython interactive environment', '__package__': None, '__loader__': None, '__spec__': None, '__annotations__': {}}
-VERSION: str = '1.8'
+VERSION: str = '1.8.2'
 
 # Exception prettifier
 def exc() -> None:
@@ -33,7 +33,7 @@ def exc() -> None:
     if name == 'SyntaxError':
         line: str = value.args[1][3] # type: ignore
         err_highlight: str = ' '*(value.offset - 1) + ('^'*(value.end_offset - value.offset) if value.end_offset - value.offset != 0 else '^') # type: ignore
-        value: = value.args[0] # type: ignore
+        value: str = value.args[0] # type: ignore
         if line.endswith('\n'):
             line = line.removesuffix('\n')
         exc: str = f'{Fore.LIGHTGREEN_EX}{top_bar}\n{Fore.LIGHTRED_EX}{name} {Fore.LIGHTGREEN_EX}in Cell {Fore.GREEN}{cell_number}\n{Fore.RESET}{line}\n{err_highlight}\n\n{Fore.LIGHTRED_EX}{name}{Fore.RESET}: {value}'

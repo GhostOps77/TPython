@@ -8,7 +8,7 @@ with open('requirements.txt', 'r') as f:
     DEPENDENCIES = f.read().splitlines()
 
 python_version = sys.version_info
-__version__ = '1.8.2'
+__version__ = '1.8.3'
 
 if __name__ == '__main__':
     if python_version.major == 3 and python_version.minor >= 6:

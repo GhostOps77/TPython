@@ -27,7 +27,6 @@ $ pip install TPython
 ## Dependencies
 ```
 colorama
-jsonc_parser
 ```
 
 ## **Usage**

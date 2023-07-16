@@ -11,7 +11,7 @@ class JSONCDecodeError(Exception):
 # Parser
 def parse_file(file: str) -> dict:
     # Read the contents of the file into a string
-    with open(file, 'r') as f:
+    with open(file) as f:
         content:str = f.read()
 
     # Remove the comments from the string
@@ -25,5 +25,5 @@ def parse_file(file: str) -> dict:
             raise JSONCDecodeError(f"expected '/*' before '*/', line {line_no}")
         elif '/*' in element:
             raise JSONCDecodeError(f"expected '*/' after '/*', line {line_no}")
-    
+
     return json.loads(json_str)

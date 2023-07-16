@@ -23,7 +23,7 @@ cell_number: int = 1
 err: bool = False
 ind: bool = False
 namespace: dict = {'__builtins__': __builtins__, '__name__': '__main__', '__doc__': 'Automatically created module for TPython interactive environment', '__package__': None, '__loader__': None, '__spec__': None, '__annotations__': {}}
-VERSION: str = '1.8.2'
+VERSION: str = '1.8.3'
 
 # Exception prettifier
 def exc() -> None:
@@ -99,10 +99,6 @@ if config['config']['notify_updates']:
         return
     Thread(target=update_checker).run()
 
-# Entry point
-def main() -> None:
-    global cell_number, err, ind
-
     # Exit function
     def ext(crash_m: str = '', crash: bool = False) -> None:
         columns = os.get_terminal_size().columns
@@ -121,35 +117,39 @@ def main() -> None:
                 print(f'{msg}')
             sys.exit()
 
-    try:
-        # Execute function
-        def execute(code: str, timeit_b: bool = False) -> None:
-            global err, cell_number
-            run = False
-            if timeit_b:
-                try:
-                    time = timeit(code, globals=namespace, number=1)
-                    print(f'{TNP_COLORS["time_text"]["text_color"]}Execution time: {TNP_COLORS["time_text"]["time_color"]}{time}')
-                except Exception:
-                    exc()
-                    err = True
-            else:
-                try:
-                    eval_return = eval(code, namespace)
-                    if eval_return != None:
-                        print(repr(eval_return))
-                    err = False
-                except:
-                    run = True
-                if run:
-                    try:
-                        exec(code, namespace)
-                        err = False
-                    except Exception:
-                        exc()
-                        err = True
-            cell_number += 1
+# Execute function
+def execute(code: str, timeit_b: bool = False, REPL = False) -> None:
+    global err, cell_number
+    run = False
+    if timeit_b:
+        try:
+            time = timeit(code, globals=namespace, number=1)
+            print(f'{TNP_COLORS["time_text"]["text_color"]}Execution time: {TNP_COLORS["time_text"]["time_color"]}{time}')
+        except Exception:
+            exc()
+            err = True
+    else:
+        try:
+            eval_return = eval(code, namespace)
+            if eval_return != None:
+                print(repr(eval_return))
+            err = False
+        except:
+            run = True
+        if run:
+            try:
+                exec(code, namespace)
+                err = False
+            except Exception:
+                exc()
+                err = True
+    cell_number += 1
 
+# Entry point
+def main() -> None:
+    global cell_number, err, ind
+
+    try:
         # Welcome message
         if config['config']['welcome_msg']:
             columns = os.get_terminal_size().columns
